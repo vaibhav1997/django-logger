@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+    <head><title>User Logging</title></head>
+    <body>
+        <h3>User Logging</h3>
+        {% block content %}
+        <form>
+            <p>
+                <label for="username">Username</label>
+                <input type="text" id="username">
+            </p>
+            <p>
+                <label for="password">Password</label>
+                <input type="password" id="password">
+            </p>
+            <p>
+                <button type="submit" class="login-button">LOGIN</button>
+            </p>
+        </form>
+        {% if user.is_authenticated %}
+        <p class="hello-user">  Hi {{ user.username}}! </p>
+        <button type="submit" class="logout-button">LOGOUT</button>
+        <h4>Data Logger</h4>
+        <button type="submit" class="activate-button">ActivateAPI</button>
+        <button type="submit" class="ring-button">RingAPI</button>
+        <div id="data-logger"></div>
+        {% endif %}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                var csrftoken = Cookies.get('csrftoken'); //JS Cookie Library
+
+                //LOGIN
+                $(".login-button").on("click", function(e){
+                    e.preventDefault();
+                    $.ajax({
+                        type:"POST",
+                        url: "{% url 'user-login' %}",
+                        headers: {"X-CSRFToken": csrftoken},
+                        data: {
+                            "username":$("#username").val(),
+                            "password":$("#password").val(),
+                        },
+                        dataType: "JSON",
+                        success: function(data, status) {
+                            console.log(status)
+                            window.location="http://127.0.0.1:8000/"
+                        },
+                        error: function(data, status) {
+                            console.log(status)
+                            window.location= "http://127.0.0.1:8000/"
+                        },
+                        complete: function() {
+                            $("#username").val("")
+                            $("#password").val("")
+                        }
+                    })
+                })
+
+                //LOGOUT
+                $(".logout-button").on("click", function(e){
+                    e.preventDefault();
+                    $.ajax({
+                        type:"POST",
+                        url: "{% url 'user-logout' %}",
+                        headers: {"X-CSRFToken": csrftoken},
+                        success: function(data) {
+                            console.log(status)
+                            window.location.reload("127.0.0.1:8000")
+                        },
+                    })
+                })
+
+                //ActivateAPI
+                $(".activate-button").on("click", function(e){
+                    e.preventDefault();
+                    $.ajax({
+                        type:"POST",
+                        url: "{% url 'activate-api' %}",
+                        headers: {"X-CSRFToken": csrftoken},
+                        success: function(data) {
+                            // console.log(data)
+                            document.getElementById('data-logger').innerHTML += "<p>"+ data + "</p>"
+                        },
+                    })
+                })
+
+                //RingAPI
+                $(".ring-button").on("click", function(e){
+                    e.preventDefault();
+                    $.ajax({
+                        type:"POST",
+                        url: "{% url 'ring-api' %}",
+                        headers: {"X-CSRFToken": csrftoken},
+                        success: function(data) {
+                            console.log(data)
+                            document.getElementById('data-logger').innerHTML += "<p>"+ data + "</p>"
+                        },
+                    })
+                })
+
+
+
+            })
+        
+        </script>
+        {% endblock %}
+    </body>
+</html>
