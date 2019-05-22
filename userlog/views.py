@@ -140,7 +140,7 @@ def ContactThread(message):
     subject = 'Hello - Testing threads'
     mailmessage = "This is the message " + message
     email_from = settings.EMAIL_HOST_USER
-    recipent_list = ['vai.manohar@gmail.com',]
+    recipent_list = ['whotosendto@gmail.com',]
     send_mail(subject, mailmessage,email_from, recipent_list)
     return 1
 
