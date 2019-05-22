@@ -10,4 +10,5 @@ urlpatterns = [
     path('userlogout', views.userlogout, name="user-logout"),
     path('activate', views.activate, name="activate-api"),
     path('ring', views.ring, name="ring-api"),
+    path('contact', views.contact, name='contact-api'),
 ]

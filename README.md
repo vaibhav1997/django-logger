@@ -5,6 +5,7 @@ This is a basic django-based user logging app for logging details of users and A
 
  - Crone (crontab)
  - Redis (Redis server)
+ - Threading
 
  ###Redis
  > redis-server

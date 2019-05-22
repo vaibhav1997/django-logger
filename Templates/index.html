@@ -25,6 +25,13 @@
         <button type="submit" class="ring-button">RingAPI</button>
         <div id="data-logger"></div>
         {% endif %}
+        <form>
+            <p>
+                <label for="contact-desc">Contact Us</label>
+                <textarea id = "contact-desc"></textarea>
+                <button type="submit" class="contact-button">SEND</button>
+            </p>
+        </form>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
         <script type="text/javascript">
@@ -97,6 +104,29 @@
                             console.log(data)
                             document.getElementById('data-logger').innerHTML += "<p>"+ data + "</p>"
                         },
+                    })
+                })
+
+                //Contact-Submit
+                $(".contact-button").on("click", function(e){
+                    e.preventDefault();
+                    
+                    $.ajax({
+                        type:"POST",
+                        url: "{% url 'contact-api' %}",
+                        headers: {"X-CSRFToken": csrftoken},
+                        data: {
+                            "contact": $("#contact-desc").val(),
+                        },
+                        success: function(data) {
+                            console.log("Completed")
+                        },
+                        error: function(data) {
+                            console.log(data)
+                        },
+                        complete: function(){
+                            $("#contact-desc").val("")
+                        }
                     })
                 })
 

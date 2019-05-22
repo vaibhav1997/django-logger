@@ -16,6 +16,9 @@ from .serializers import *
 from django.core.cache import cache
 from django_redis import get_redis_connection
 import pickle
+from django.conf import settings
+from django.core.mail import send_mail
+import threading
 
 r = get_redis_connection("default")  #for raw_redis
 
@@ -123,6 +126,23 @@ def ring(request):
     # 
     return Response(message)
     
+
+@csrf_exempt
+@api_view(["POST"])
+def contact(request):
+    ContactDes = request.data.get("contact")
+    # ContactThread(ContactDes)
+    contactThread = threading.Thread(target=ContactThread, args=(ContactDes,))
+    contactThread.start()
+    return Response("Completed")
+
+def ContactThread(message):
+    subject = 'Hello - Testing threads'
+    mailmessage = "This is the message " + message
+    email_from = settings.EMAIL_HOST_USER
+    recipent_list = ['vai.manohar@gmail.com',]
+    send_mail(subject, mailmessage,email_from, recipent_list)
+    return 1
 
 
 # User function
